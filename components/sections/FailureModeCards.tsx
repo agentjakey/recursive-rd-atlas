@@ -69,7 +69,7 @@ export function FailureModeCards() {
                 type="button"
                 onClick={() => setExpanded(isExpanded ? null : fm.id)}
                 aria-expanded={isExpanded}
-                className="w-full text-left border transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="w-full text-left border transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 hover:shadow-[0_2px_10px_rgba(26,25,21,0.06)]"
                 style={{
                   background: isExpanded ? '#FFFFFF' : 'transparent',
                   padding: '20px',

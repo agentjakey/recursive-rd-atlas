@@ -55,6 +55,32 @@
   border-radius: 2px;
 }
 
+/* ── Card interactive hover ── */
+.card-hover {
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 2px 10px rgba(26, 25, 21, 0.07);
+  border-color: #D0CCC5;
+}
+
+/* ── Underline link transition ── */
+.link-line {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+.link-line:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ── Section left-rule (accent) ── */
+.section-rule {
+  border-left: 2px solid #C2411C;
+  padding-left: 12px;
+}
+
 @layer base {
   :root {
     --color-background: #FAFAF8;

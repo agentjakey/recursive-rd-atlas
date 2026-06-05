@@ -5,7 +5,7 @@ import { SectionWrapper } from '@/components/ui/SectionWrapper'
 import { SectionHeading, Prose, Caption, Callout } from '@/components/ui/Typography'
 import { EVIDENCE_ITEMS, EvidenceItem } from '@/lib/data'
 
-const TREND_ICONS: Record<EvidenceItem['trend'], string> = {
+const TREND_SYMBOLS: Record<EvidenceItem['trend'], string> = {
   up: '+',
   down: '-',
   mixed: '~',
@@ -17,6 +17,12 @@ const TREND_COLORS: Record<EvidenceItem['trend'], string> = {
   mixed: '#D4A853',
 }
 
+const TREND_LABELS: Record<EvidenceItem['trend'], string> = {
+  up: 'Rising',
+  down: 'Falling',
+  mixed: 'Mixed',
+}
+
 export function EvidencePanel() {
   return (
     <SectionWrapper id="evidence" label="Evidence">
@@ -26,7 +32,7 @@ export function EvidencePanel() {
         <p>
           These are the key metrics currently in the public record on AI involvement
           in R&D. All figures are sourced from Anthropic Institute publications or
-          METR evaluations. The interpretations are careful readings of what the
+          METR evaluations. Interpretations reflect careful readings of what the
           data establishes and what it does not.
         </p>
       </Prose>
@@ -35,22 +41,23 @@ export function EvidencePanel() {
         {EVIDENCE_ITEMS.map((item, i) => (
           <motion.div
             key={item.metric}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.4, delay: i * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
-            className="border border-border"
+            className="border border-border card-hover"
             style={{ background: '#FFFFFF', padding: '24px' }}
           >
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div className="flex-1">
-                <p className="font-mono text-[11px] text-secondary tracking-widest uppercase mb-2">
+            {/* Metric header row */}
+            <div className="flex items-start justify-between gap-4 mb-5">
+              <div className="flex-1 min-w-0">
+                <p className="font-mono text-[10px] text-secondary tracking-widest uppercase mb-2">
                   {item.metric}
                 </p>
-                <div className="flex items-baseline gap-3">
+                <div className="flex items-baseline gap-3 flex-wrap">
                   <span
-                    className="font-sans font-semibold text-primary"
-                    style={{ fontSize: '32px', lineHeight: 1.1 }}
+                    className="font-sans font-semibold text-primary tabular-nums"
+                    style={{ fontSize: '30px', lineHeight: 1.1 }}
                   >
                     {item.value}
                   </span>
@@ -59,26 +66,44 @@ export function EvidencePanel() {
                   </span>
                 </div>
               </div>
+
+              {/* Trend badge */}
               <div
-                className="font-mono text-[18px] font-bold flex-shrink-0 w-8 h-8 flex items-center justify-center border"
+                className="flex flex-col items-center gap-1 flex-shrink-0 px-3 py-2 border"
                 style={{
                   color: TREND_COLORS[item.trend],
                   borderColor: `${TREND_COLORS[item.trend]}40`,
-                  background: `${TREND_COLORS[item.trend]}0F`,
+                  background: `${TREND_COLORS[item.trend]}0C`,
+                  minWidth: '56px',
                 }}
               >
-                {TREND_ICONS[item.trend]}
+                <span className="font-mono text-[18px] font-bold leading-none">
+                  {TREND_SYMBOLS[item.trend]}
+                </span>
+                <span className="font-mono text-[9px] tracking-widest uppercase leading-none">
+                  {TREND_LABELS[item.trend]}
+                </span>
               </div>
             </div>
 
-            <div className="border-t border-border pt-4">
-              <p className="font-mono text-[11px] text-accent tracking-widest uppercase mb-2">
+            {/* Interpretation block */}
+            <div
+              className="border-t border-border pt-4 border-l-[2px] pl-4 mt-1"
+              style={{ borderLeftColor: `${TREND_COLORS[item.trend]}50` }}
+            >
+              <p className="font-mono text-[10px] tracking-widest uppercase mb-2" style={{ color: '#8A8880' }}>
                 Interpretation
               </p>
-              <p className="font-serif text-[15px] text-secondary leading-[1.75] mb-2">
+              <p className="font-serif text-[15px] text-secondary leading-[1.78] mb-3">
                 {item.interpretation}
               </p>
-              <Caption>Source: {item.source}</Caption>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{ background: TREND_COLORS[item.trend] }}
+                />
+                <Caption>Source: {item.source}</Caption>
+              </div>
             </div>
           </motion.div>
         ))}

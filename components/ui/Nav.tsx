@@ -26,7 +26,7 @@ export function Nav() {
             <a
               key={href}
               href={href}
-              className="font-sans text-[12px] text-secondary hover:text-primary transition-colors duration-150"
+              className="font-sans text-[12px] text-secondary hover:text-primary transition-colors duration-150 underline underline-offset-2 decoration-transparent hover:decoration-[#D0CCC5] transition-[color,text-decoration-color] duration-150"
             >
               {label}
             </a>

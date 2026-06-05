@@ -401,22 +401,28 @@ export function BottleneckSimulator() {
       <div className="max-w-[720px] mx-auto px-6">
         <SectionHeading n={4}>Bottleneck Simulator</SectionHeading>
 
-        {/* Disclaimer banner */}
+        {/* Disclaimer banner — prominent, above everything else */}
         <div
-          className="flex items-start gap-3 px-4 py-3 mb-8 border-l-[3px]"
-          style={{ borderLeftColor: '#D4A853', background: '#D4A85308' }}
+          className="flex items-start gap-4 px-5 py-4 mb-8 border border-l-[3px]"
+          style={{
+            borderLeftColor: '#D4A853',
+            borderColor: '#D4A85340',
+            background: '#D4A85308',
+          }}
         >
-          <span
-            className="font-mono text-[10px] tracking-widest uppercase flex-shrink-0 mt-[2px]"
-            style={{ color: '#D4A853' }}
-          >
-            Toy Model
-          </span>
-          <p className="font-sans text-[13px] leading-[1.65]" style={{ color: '#5C5A54' }}>
-            This is a toy model for intuition, not a forecast. Formulas are intentionally
-            simplified and fully transparent in the source code. Vary the sliders to
-            explore how acceleration and oversight interact. Do not treat any output
-            as a prediction.
+          <div className="flex-shrink-0 mt-px">
+            <span
+              className="block font-mono text-[9px] tracking-[0.14em] uppercase px-2 py-1 border"
+              style={{ color: '#D4A853', borderColor: '#D4A85360', background: '#D4A85312' }}
+            >
+              Educational Model
+            </span>
+          </div>
+          <p className="font-sans text-[13px] leading-[1.68]" style={{ color: '#5C5A54' }}>
+            This is a toy model for intuition, not a forecast or scientific instrument.
+            Formulas are intentionally simplified and fully documented in the source code.
+            Adjust the sliders to explore how acceleration and oversight interact.
+            Do not treat any output as a prediction of real-world conditions.
           </p>
         </div>
 

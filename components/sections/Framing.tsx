@@ -30,8 +30,9 @@ export function Framing() {
       <Callout variant="info">
         Anthropic identifies three possible futures: current trends stall, AI substantially
         automates development while humans set research directions, or AI systems achieve
-        full recursive self-improvement and begin building successors. The second scenario
-        is already partially underway. The third has not occurred.
+        full recursive self-improvement and begin building successors. Anthropic's own
+        publications indicate the second scenario has partially begun, citing AI code
+        authorship rates and research decision metrics. The third has not occurred.
       </Callout>
 
       <Prose>

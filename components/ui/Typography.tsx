@@ -7,7 +7,7 @@ interface BaseProps {
 
 export function Prose({ children, className = '' }: BaseProps) {
   return (
-    <div className={`font-serif text-[18px] leading-[1.8] text-primary space-y-5 ${className}`}>
+    <div className={`font-serif text-[18px] leading-[1.82] text-primary space-y-5 ${className}`}>
       {children}
     </div>
   )
@@ -28,12 +28,26 @@ interface SectionHeadingProps {
 }
 
 export function SectionHeading({ n, children, className = '' }: SectionHeadingProps) {
+  const label = typeof n === 'number' ? String(n).padStart(2, '0') : n
   return (
     <div className={`mb-10 ${className}`}>
-      <span className="block font-mono text-xs text-accent tracking-widest uppercase mb-3">
-        {typeof n === 'number' ? String(n).padStart(2, '0') : n}
-      </span>
-      <h2 className="font-sans text-4xl font-semibold text-primary leading-tight">
+      <div className="flex items-center gap-3 mb-4">
+        <span
+          className="font-mono text-[11px] tracking-[0.14em] uppercase"
+          style={{ color: '#C2411C' }}
+        >
+          {label}
+        </span>
+        <span
+          className="flex-1 h-px"
+          style={{ background: '#E4E2DB' }}
+          aria-hidden="true"
+        />
+      </div>
+      <h2
+        className="font-sans font-semibold text-primary leading-tight"
+        style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', letterSpacing: '-0.02em' }}
+      >
         {children}
       </h2>
     </div>
@@ -54,12 +68,21 @@ export function Callout({ children, className = '', variant = 'default' }: Callo
       ? '#9B7EBD'
       : '#C2411C'
 
+  const bg =
+    variant === 'warning'
+      ? '#D4A85306'
+      : variant === 'info'
+      ? '#4E809806'
+      : variant === 'care'
+      ? '#9B7EBD06'
+      : '#C2411C06'
+
   return (
     <aside
-      className={`border-l-[3px] pl-5 py-0.5 my-8 ${className}`}
-      style={{ borderLeftColor: borderColor }}
+      className={`border-l-[3px] pl-5 pr-4 py-3 my-8 ${className}`}
+      style={{ borderLeftColor: borderColor, background: bg }}
     >
-      <div className="font-serif text-[17px] leading-[1.8] text-secondary">{children}</div>
+      <div className="font-serif text-[16px] leading-[1.8] text-secondary">{children}</div>
     </aside>
   )
 }
@@ -92,9 +115,7 @@ export function Caption({ children, className = '' }: BaseProps) {
 
 export function MonoLabel({ children, className = '' }: BaseProps) {
   return (
-    <span
-      className={`font-mono text-[11px] tracking-widest uppercase ${className}`}
-    >
+    <span className={`font-mono text-[11px] tracking-widest uppercase ${className}`}>
       {children}
     </span>
   )
