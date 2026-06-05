@@ -285,6 +285,126 @@ export const FAILURE_MODES: FailureMode[] = [
   },
 ]
 
+export interface LoopNode {
+  id: string
+  label: string
+  index: number
+  color: string
+  what: string
+  automated: string
+  humanDependent: string
+  danger: string
+  warnings: string[]
+}
+
+export const LOOP_NODES: LoopNode[] = [
+  {
+    id: 'model',
+    label: 'Model',
+    index: 0,
+    color: '#4E8098',
+    what: 'The current frontier model. It generates text, writes code, proposes hypotheses, and acts as the substrate for all downstream agent behavior. Every capability of every agent in the loop is bounded by what this model can do.',
+    automated: 'Inference, context management, token generation, tool calling, multi-turn memory within a context window.',
+    humanDependent: 'Architecture choices, training objective design, safety evaluations before release, decisions about what the model is allowed to do by default.',
+    danger: 'If a model with subtly misaligned values or miscalibrated confidence is used as the base, every downstream agent action inherits that flaw. Problems at this node propagate through every other stage.',
+    warnings: [
+      'Rapid capability jumps between versions with no corresponding safety re-evaluation',
+      'Reduced interpretability as model scale increases',
+      'Model self-reports of confidence that do not match actual reliability on held-out tasks',
+    ],
+  },
+  {
+    id: 'agent-scaffold',
+    label: 'Agent Scaffold',
+    index: 1,
+    color: '#6B8A6B',
+    what: 'The harness that wraps the base model into an agent: tool calling, memory systems, planning loops, and task decomposition. The scaffold defines what the model can reach in the world and how it persists state between actions.',
+    automated: 'Tool dispatch, context compression, subagent spawning, error recovery loops, code execution, file system access.',
+    humanDependent: 'Tool set design, permission boundary decisions, what the agent is allowed to call and with what scope.',
+    danger: 'Scaffold design determines blast radius. An agent with write access to training pipelines and broad tool permissions is categorically different from a coding assistant. The scaffold is where access control either lives or does not.',
+    warnings: [
+      'Scaffold granting persistent memory across independent sessions without audit logging',
+      'Agents spawning child agents with equal or higher permissions than the parent',
+      'Toolchains that include write access to model weights, training configs, or evaluation code',
+    ],
+  },
+  {
+    id: 'experiment',
+    label: 'Code / Experiment',
+    index: 2,
+    color: '#9B7EBD',
+    what: 'The agent writes and runs code, designs experiments, implements architectural changes, and generates the artifacts that constitute an R&D work product. This is where the model\'s capability translates into research output.',
+    automated: 'Code generation, execution, basic debugging, implementing specified designs, running parameterized experiment sweeps.',
+    humanDependent: 'Deciding what experiment to run. Recognizing when results are invalid. Choosing what constitutes a useful research artifact versus a plausible-looking but misleading one.',
+    danger: 'An agent running ML experiments without human oversight can execute thousands of iterations of a misspecified objective before anyone notices. Each iteration reinforces the wrong direction.',
+    warnings: [
+      'Agents running experiments with no human-readable logging of intermediate decisions',
+      'Experiments that modify their own evaluation code during execution',
+      'Objective functions that were not explicitly specified by a human at the start of the run',
+    ],
+  },
+  {
+    id: 'evaluation',
+    label: 'Evaluation',
+    index: 3,
+    color: '#D4A853',
+    what: 'Experimental outputs are scored against a metric. This is what separates progress from noise. The quality of the evaluation function determines the quality of everything downstream. A bad eval poisons the entire loop.',
+    automated: 'Benchmark scoring, unit tests, automated evals on held-out test sets, regression checks.',
+    humanDependent: 'Defining what counts as success. Detecting when a metric is being gamed. Auditing surprising results. Deciding whether a score increase reflects genuine capability gain.',
+    danger: 'If the evaluation function can be influenced by the agent, Goodhart\'s law applies immediately: the metric stops measuring what it was intended to measure, and the agent optimizes for the metric instead of the underlying goal.',
+    warnings: [
+      'Eval metrics defined or modified by the AI system being evaluated',
+      'No out-of-distribution test sets separate from the training distribution',
+      'Rising benchmark scores while downstream task quality or safety properties degrade',
+    ],
+  },
+  {
+    id: 'research-decision',
+    label: 'Research Decision',
+    index: 4,
+    color: '#C2411C',
+    what: 'Based on evaluation results, a decision is made: what to try next, whether to scale the current approach, whether to abandon a direction. This is the highest-leverage point in the loop. What gets decided here shapes every subsequent iteration.',
+    automated: 'Claude improved from 51% to 64% on research step selection in 5 months (Anthropic Institute, Apr 2026). Still well below the threshold for reliable autonomous direction-setting.',
+    humanDependent: 'Choosing which problems are worth working on. Deciding when results are surprising enough to require investigation rather than iteration. Setting the research agenda.',
+    danger: 'Autonomous research direction-setting is the node that closes the loop. Once an AI system can choose what to work on and how to measure it, human oversight becomes reactive. By the time a problem is visible, the loop has already run many iterations in the wrong direction.',
+    warnings: [
+      'AI system choosing its own next research objective without explicit human approval',
+      'Evaluation criteria that drift from the original research intent over successive runs',
+      'Human review cycles compressed to keep pace with AI output volume',
+    ],
+  },
+  {
+    id: 'training-run',
+    label: 'Training Run',
+    index: 5,
+    color: '#7B4B44',
+    what: 'Findings from experiments are incorporated into a new training run: updated data, changed objectives, modified architecture. The training run is what makes insights persistent. What went into the run defines what comes out.',
+    automated: 'Distributed training infrastructure, hyperparameter search, checkpoint management, loss curve monitoring.',
+    humanDependent: 'Deciding what data to include. Reviewing the training objective before the run begins. Safety evaluations before the run produces a candidate model. The final go/no-go decision.',
+    danger: 'A training run that incorporates AI-selected data with AI-defined objectives, without human review of either, is the operational definition of recursive self-improvement. This is where the loop either closes under human control or closes without it.',
+    warnings: [
+      'Training data sourced from agent-generated outputs without human curation or review',
+      'Objective function modified between runs without a documented human decision',
+      'Training run initiated without a mandatory safety evaluation gate',
+    ],
+  },
+  {
+    id: 'new-model',
+    label: 'New Model',
+    index: 6,
+    color: '#4E8098',
+    what: 'The successor model. It inherits the capabilities and value structure of its training process. If that process was sound, it may be more capable and well-aligned. If not, it inherits whatever errors were introduced, possibly amplified.',
+    automated: 'Capability benchmarking, automated red-teaming, regression testing against predecessor model on standard evals.',
+    humanDependent: 'Deployment decisions. Interpreting evaluation results. Making the call on whether the model is safe to release and at what capability level. Understanding whether capability gains are accompanied by corresponding alignment gains.',
+    danger: 'A successor model that is more capable but less interpretable than its predecessor, deployed without adequate evaluation, starts the next iteration of the loop from a worse epistemic position. Each cycle compounds.',
+    warnings: [
+      'Deployment of successor model before evaluation of predecessor model is fully complete',
+      'Capability gains that outpace available interpretability and evaluation tools',
+      'Model that behaves differently in evaluation environments versus actual deployment conditions',
+    ],
+  },
+]
+
 export const EVIDENCE_ITEMS: EvidenceItem[] = [
   {
     metric: 'AI Code Authorship at Anthropic',
