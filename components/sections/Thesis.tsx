@@ -34,8 +34,8 @@ export function Thesis() {
       <Callout variant="default">
         Anthropic has proposed that AI labs explore whether a coordinated option
         to slow or temporarily pause frontier development should exist if risks
-        rise. They acknowledge that verification of any such agreement is "much
-        more challenging than with other technologies." The proposal exists. The
+        rise. They acknowledge that verification of any such agreement is &ldquo;much
+        more challenging than with other technologies.&rdquo; The proposal exists. The
         mechanism does not.
       </Callout>
 

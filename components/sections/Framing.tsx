@@ -15,7 +15,7 @@ export function Framing() {
         </p>
         <p>
           The distinction matters. A lot of writing about this topic either collapses
-          the gap between "AI writes code faster" and "AI builds itself," or treats
+          the gap between &ldquo;AI writes code faster&rdquo; and &ldquo;AI builds itself,&rdquo; or treats
           the gap as so large that the trend is irrelevant. Neither framing serves
           careful thinking.
         </p>
@@ -30,21 +30,21 @@ export function Framing() {
       <Callout variant="info">
         Anthropic identifies three possible futures: current trends stall, AI substantially
         automates development while humans set research directions, or AI systems achieve
-        full recursive self-improvement and begin building successors. Anthropic's own
+        full recursive self-improvement and begin building successors. Anthropic&apos;s own
         publications indicate the second scenario has partially begun, citing AI code
         authorship rates and research decision metrics. The third has not occurred.
       </Callout>
 
       <Prose>
         <p>
-          The Anthropic Institute's research agenda frames the core question this way:
+          The Anthropic Institute&apos;s research agenda frames the core question this way:
           when AI systems develop their successors autonomously, how do humans exercise
           meaningful visibility into and control over those systems? That question does
           not require recursive self-improvement to already be happening. It requires
           it to be plausible enough to plan for.
         </p>
         <p>
-          METR's time-horizon measurements find that exponential trend fits outperform
+          METR&apos;s time-horizon measurements find that exponential trend fits outperform
           linear and logistic models. They explicitly reject logistic curves because
           there is no evidence of the exponential growth in time horizon slowing down.
           That is a statement about current observations, not a guarantee about the future.

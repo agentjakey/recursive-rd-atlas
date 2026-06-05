@@ -33,7 +33,7 @@ function HeroLoopDiagram() {
   return (
     <div>
       <p className="font-mono text-[10px] tracking-[0.1em] uppercase mb-5" style={{ color: '#AEABA4' }}>
-        The AI R&D Loop &mdash; conceptual
+        The AI R&D Loop (Conceptual)
       </p>
       <svg
         viewBox="0 0 500 375"
@@ -217,7 +217,7 @@ export function Hero() {
               className="font-serif text-primary"
               style={{ fontSize: '18px', lineHeight: 1.85, marginTop: '28px' }}
             >
-              Something is happening. Over 80% of Anthropic's merged production code is
+              Something is happening. Over 80% of Anthropic&apos;s merged production code is
               authored by Claude. The time horizon for autonomous task completion grew from
               4 minutes to 12 hours in two years. AI systems are beginning to participate
               in research decisions. None of this is recursive self-improvement. The path

@@ -4,47 +4,12 @@
 // METR Time Horizons: https://metr.org/time-horizons/
 // METR RE-Bench: https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/
 
-export type StageId = 'assisted' | 'rd' | 'closed'
-export type BottleneckId = 'judgment' | 'surprise' | 'autonomy' | 'taste' | 'verification'
-export type FailureSeverity = 'observed' | 'structural' | 'open'
-
 export interface TimelineEvent {
   date: string
   label: string
   detail: string
   source: string
   category: 'task-horizon' | 'benchmark' | 'judgment' | 'policy'
-}
-
-export interface LoopStage {
-  id: StageId
-  n: number
-  title: string
-  subtitle: string
-  description: string
-  humanRole: string
-  aiRole: string
-  color: string
-  currentState: 'active' | 'emerging' | 'speculative'
-}
-
-export interface Bottleneck {
-  id: BottleneckId
-  title: string
-  description: string
-  evidence: string
-  source: string
-  severity: 1 | 2 | 3
-}
-
-export interface FailureMode {
-  id: string
-  title: string
-  family: string
-  severity: FailureSeverity
-  description: string
-  example: string
-  source: string
 }
 
 export interface EvidenceItem {
@@ -129,92 +94,6 @@ export const TIMELINE: TimelineEvent[] = [
   },
 ]
 
-export const LOOP_STAGES: LoopStage[] = [
-  {
-    id: 'assisted',
-    n: 1,
-    title: 'AI-Assisted Coding',
-    subtitle: 'The current default',
-    description:
-      'Engineers use AI to write, review, and iterate on code. The AI accelerates execution but the human defines the goal, judges the output, and decides what ships. Over 80% of Anthropic\'s merged production code was AI-authored by May 2026.',
-    humanRole: 'Sets goals, judges quality, merges code',
-    aiRole: 'Generates, refactors, debugs, explains',
-    color: '#4E8098',
-    currentState: 'active',
-  },
-  {
-    id: 'rd',
-    n: 2,
-    title: 'AI-Assisted AI R&D',
-    subtitle: 'Measurably emerging',
-    description:
-      'AI participates in research decisions: selecting next experiments, proposing hypotheses, analyzing results. Humans retain authority over which problems matter and what counts as success. Claude improved from 51% to 64% on research step selection in five months.',
-    humanRole: 'Chooses research questions, owns evaluation criteria',
-    aiRole: 'Proposes experiments, selects next steps, executes runs',
-    color: '#9B7EBD',
-    currentState: 'emerging',
-  },
-  {
-    id: 'closed',
-    n: 3,
-    title: 'Closed-Loop Development',
-    subtitle: 'Not yet achieved',
-    description:
-      'AI autonomously sets research directions, runs experiments, evaluates results, and incorporates improvements into successor model training. No human in the loop for individual decisions. Anthropic states: "We are not there yet, and recursive self-improvement is not inevitable."',
-    humanRole: 'Oversight, validation, rate control',
-    aiRole: 'Problem selection, experimentation, self-modification',
-    color: '#C47C5A',
-    currentState: 'speculative',
-  },
-]
-
-export const BOTTLENECKS: Bottleneck[] = [
-  {
-    id: 'judgment',
-    title: 'Research Judgment',
-    description:
-      'Deciding which problems are worth working on at all. This is distinct from solving a given problem. Large performance gaps persist when AI must exercise autonomous judgment in choosing goals in both engineering and research contexts.',
-    evidence: 'Claude improved from 51% to 64% on research step selection (Nov 2025 to Apr 2026), beating humans 36% of the time at the close of that window.',
-    source: 'Anthropic Institute',
-    severity: 3,
-  },
-  {
-    id: 'surprise',
-    title: 'Responding to Unexpected Evidence',
-    description:
-      'When experiments return surprising results that contradict the original plan, AI agents tend to continue executing the prior strategy rather than updating. This is one of the clearest observed failure patterns in METR\'s RE-Bench evaluation.',
-    evidence: 'Models constrained to avoid division and exponentiation defaulted to transformer architectures despite that design being unsuitable for the constraint.',
-    source: 'METR RE-Bench',
-    severity: 3,
-  },
-  {
-    id: 'autonomy',
-    title: 'Extended Autonomous Operation',
-    description:
-      'AI agents show strong performance at short task horizons but humans improve at faster rates over longer time budgets. Median agent attempts on RE-Bench multi-hour tasks showed very little progress.',
-    evidence: 'At 32-hour budgets, human experts achieved nearly double the average AI agent scores. At 2-hour budgets, AI outperformed humans.',
-    source: 'METR RE-Bench',
-    severity: 2,
-  },
-  {
-    id: 'taste',
-    title: 'Unconventional Exploration',
-    description:
-      'AI agents excel at applying known approaches to well-specified goals. They struggle to explore genuinely unconventional solution paths, particularly when standard methods are inappropriate. Research progress often depends on trying the thing no one has tried.',
-    evidence: 'Models generated solutions more than ten times faster than humans at short budgets, but rarely explored approaches outside established methods.',
-    source: 'METR RE-Bench',
-    severity: 2,
-  },
-  {
-    id: 'verification',
-    title: 'Self-Evaluation',
-    description:
-      'A closed loop requires the AI to judge the quality of its own outputs and use that judgment to decide on the next action. The evaluator and the executor being the same system creates structural risks that do not exist when humans own evaluation.',
-    evidence: 'The April 2026 AI safety experiment required humans to create the scoring rubric. The 97% performance recovery figure is conditional on that human-defined standard.',
-    source: 'Anthropic Institute',
-    severity: 3,
-  },
-]
 
 // ─────────────────────────────────────────────────────────
 // RD FAILURE MODES — the 8 cards for FailureModeCards section
@@ -337,7 +216,7 @@ export const RD_FAILURE_MODES: RDFailureMode[] = [
     family: 'Governance',
     severity: 'open',
     definition:
-      'Individual labs make locally rational decisions — accelerating capability research, adjusting safety margins in response to competitive pressure, interpreting safety standards in their own favor — that produce collectively irrational outcomes. No single actor controls or even observes the aggregate trajectory.',
+      'Individual labs make locally rational decisions: accelerating capability research, adjusting safety margins in response to competitive pressure, and interpreting safety standards in their own favor. The aggregate outcome is irrational even when each local decision is not. No single actor controls or observes the full trajectory.',
     whyItMatters:
       'Anthropic proposed a coordinated pause option in June 2026 and acknowledged that verification of any such agreement is "much more challenging than with other technologies." The proposal exists. The mechanism does not. Safety commitments made without shared verification are only as durable as the competitive pressure that tests them.',
     warningSign:
@@ -347,74 +226,6 @@ export const RD_FAILURE_MODES: RDFailureMode[] = [
   },
 ]
 
-export const FAILURE_MODES: FailureMode[] = [
-  {
-    id: 'specification-tunnel',
-    title: 'Specification Tunnel',
-    family: 'Execution',
-    severity: 'observed',
-    description:
-      'The agent optimizes intensely for a specified goal without recognizing that the specification has become invalid or that the real goal has shifted.',
-    example:
-      'In RE-Bench, models told to avoid division and exponentiation continued submitting transformer-based architectures, which require those operations, for multiple iterations.',
-    source: 'METR RE-Bench',
-  },
-  {
-    id: 'progress-plateau',
-    title: 'Progress Plateau',
-    family: 'Autonomy',
-    severity: 'observed',
-    description:
-      'Performance gains per unit of additional time invested collapse after early progress. The agent cannot compound its own gains the way a human researcher does.',
-    example:
-      'At 32-hour task budgets, median AI agents showed very little progress relative to their 2-hour performance. Humans improved their scores at faster rates with longer time allocations.',
-    source: 'METR RE-Bench',
-  },
-  {
-    id: 'problem-blindness',
-    title: 'Problem Blindness',
-    family: 'Judgment',
-    severity: 'structural',
-    description:
-      'The ability to execute research steps is not the same as knowing which research steps are worth taking. Frontier models currently beat human choices 64% of the time on next-step selection, but cannot autonomously set the research agenda.',
-    example:
-      'In April 2026 experiments, Claude-powered agents recovered 97% of performance on an AI safety task. The humans still chose which safety problem to work on and defined what "success" meant.',
-    source: 'Anthropic Institute',
-  },
-  {
-    id: 'evaluator-collapse',
-    title: 'Evaluator Collapse',
-    family: 'Verification',
-    severity: 'structural',
-    description:
-      'In a closed loop, the model must evaluate whether its own outputs represent genuine progress. If the evaluator and the generator share the same failure modes, errors compound rather than cancel.',
-    example:
-      'This failure mode does not yet have a documented real-world instance at scale. It is structural: it follows from the architecture of any system where the same agent both produces and grades outputs.',
-    source: 'Anthropic Institute (theoretical)',
-  },
-  {
-    id: 'rate-invisibility',
-    title: 'Rate Invisibility',
-    family: 'Governance',
-    severity: 'open',
-    description:
-      'If AI systems begin contributing to their own training improvements, the rate of capability gain may become difficult to observe or predict from the outside. Anthropic\'s research agenda identifies telemetry systems for measuring aggregate AI R&D speed as an open problem.',
-    example:
-      'There is currently no agreed-upon method for measuring whether an AI system is meaningfully accelerating the development of its successor. This is one of the Anthropic Institute\'s stated open research questions.',
-    source: 'Anthropic Research Agenda',
-  },
-  {
-    id: 'verification-overhead',
-    title: 'Verification Overhead',
-    family: 'Governance',
-    severity: 'open',
-    description:
-      'As AI systems produce more outputs at higher rates, the human cost of reviewing and verifying those outputs may grow faster than the benefit. Humans shift from doing work to approving work, but approving at scale is its own unsolved problem.',
-    example:
-      'At 80% AI code authorship, engineers shipping 8x more code per quarter, the marginal cost of careful human review per PR increases. The question is whether review quality degrades as volume scales.',
-    source: 'Anthropic Institute',
-  },
-]
 
 export interface LoopNode {
   id: string

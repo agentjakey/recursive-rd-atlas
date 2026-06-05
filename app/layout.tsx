@@ -23,15 +23,42 @@ const dmMono = DM_Mono({
   display: 'swap',
 })
 
+const SITE_URL = 'https://recursive-rd-atlas.vercel.app'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Recursive R&D Atlas',
   description:
-    'Mapping the path from AI-assisted coding to AI-driven research. A careful look at where the loop closes, where it breaks, and what the evidence actually says.',
-  authors: [{ name: 'Jacob Ortiz' }],
+    'Interactive atlas of AI-driven AI R&D, recursive self-improvement warning signs, bottlenecks, and oversight failure modes. Educational tool. Not a forecast.',
+  authors: [{ name: 'Jacob Ortiz', url: 'https://github.com/agentjakey' }],
+  keywords: [
+    'recursive self-improvement',
+    'AI R&D',
+    'AI safety',
+    'mechanistic interpretability',
+    'METR',
+    'Anthropic',
+    'bottleneck simulator',
+    'oversight failure modes',
+  ],
   openGraph: {
-    title: 'Recursive R&D Atlas',
-    description: 'Mapping the path from AI-assisted coding to AI-driven research.',
     type: 'website',
+    url: SITE_URL,
+    title: 'Recursive R&D Atlas',
+    description:
+      'Mapping the path from AI-assisted coding to AI-driven research. Educational tool based on Anthropic Institute and METR publications.',
+    siteName: 'Recursive R&D Atlas',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Recursive R&D Atlas',
+    description:
+      'Mapping the path from AI-assisted coding to AI-driven research. Educational tool based on Anthropic Institute and METR publications.',
+    creator: '@agentjakey',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 

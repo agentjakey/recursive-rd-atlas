@@ -702,9 +702,9 @@ export function BottleneckSimulator() {
             <p>
               Research judgment is the deepest bottleneck this simulator cannot quantify.
               No slider captures whether the AI system knows which problem is worth
-              working on. Anthropic notes that "large performance gaps persist when it
+              working on. Anthropic notes that &ldquo;large performance gaps persist when it
               comes to Claude exercising judgement in choosing goals in both engineering
-              and research." As of April 2026, humans still chose the research problem
+              and research.&rdquo; As of April 2026, humans still chose the research problem
               and defined the scoring rubric in every published experiment.
             </p>
           </Prose>
