@@ -216,6 +216,137 @@ export const BOTTLENECKS: Bottleneck[] = [
   },
 ]
 
+// ─────────────────────────────────────────────────────────
+// RD FAILURE MODES — the 8 cards for FailureModeCards section
+// These are failure modes specific to AI-driven R&D pipelines.
+// ─────────────────────────────────────────────────────────
+
+export interface RDFailureMode {
+  id: string
+  title: string
+  family: string
+  severity: 'observed' | 'structural' | 'open'
+  definition: string
+  whyItMatters: string
+  warningSign: string
+  mitigation: string
+}
+
+export const RD_FAILURE_MODES: RDFailureMode[] = [
+  {
+    id: 'rubber-stamp-oversight',
+    title: 'Rubber-Stamp Oversight',
+    family: 'Oversight',
+    severity: 'structural',
+    definition:
+      'Human review becomes nominal as AI output volume grows faster than reviewer bandwidth. Approvals happen on schedule because they are required, not because the reviewer has genuine confidence in what they are approving.',
+    whyItMatters:
+      'Every other safety mechanism depends on humans catching problems during review. If review is perfunctory, no downstream safeguard can compensate. The appearance of oversight persists while the substance disappears. At 80% AI code authorship and 8x engineering output, this risk is not hypothetical.',
+    warningSign:
+      'Approval latency drops as output volume rises. Reviewers report approving work they do not fully understand. Post-incident analysis reveals that the problematic change was reviewed and approved without objection.',
+    mitigation:
+      'Hard limits on per-reviewer volume per day. Random deep-audit sampling at rates high enough to be meaningful. Separate fast-path review (low-risk changes) from full review (model weights, training configs, evaluation code). Track reviewer confidence explicitly, not just approval.',
+  },
+  {
+    id: 'benchmark-overfitting-loop',
+    title: 'Benchmark Overfitting Loop',
+    family: 'Measurement',
+    severity: 'observed',
+    definition:
+      'AI systems are trained, fine-tuned, and selected based on performance on a fixed set of benchmarks. Over successive iterations, benchmark performance improves while the underlying capability the benchmark was measuring may not. The benchmark stops being a signal and becomes a target.',
+    whyItMatters:
+      'Safety benchmarks are not immune. If the evals used to gate deployment also shape training objectives, the system learns to look aligned rather than be aligned. SWE-bench went from single-digit scores to saturation in two years; CORE-Bench followed in 15 months. Saturation at speed is a warning, not a success.',
+    warningSign:
+      'Benchmark scores rise steeply while performance on held-out tasks, novel problems, or deployment-quality metrics is flat or declining. Researchers note that "the model knows how to take this eval." New benchmark releases are saturated within months of publication.',
+    mitigation:
+      'Maintain strictly held-out evaluation sets that are never used in training or fine-tuning decisions. Rotate benchmarks before saturation. Weight novel tasks more than established ones in deployment gates. Treat benchmark saturation as a signal to replace the benchmark, not as a success.',
+  },
+  {
+    id: 'safety-erosion-through-iteration',
+    title: 'Safety Erosion Through Iteration',
+    family: 'Training',
+    severity: 'structural',
+    definition:
+      'Each successive training run makes a small, individually defensible compromise on a safety property because the incremental capability gain appears to justify it. Over many iterations, the compounded erosion is substantial. No single decision looks like the problem.',
+    whyItMatters:
+      'Trajectory risk is harder to detect than threshold risk. When each step is defensible, the cumulative drift is only visible in retrospect or at long time horizons. A research agenda that permits small regressions on safety properties in each iteration will produce large regressions without any obvious inflection point.',
+    warningSign:
+      'Safety evaluations show small regressions that are individually within acceptable bounds but directionally consistent across successive model versions. Teams normalize small regressions as "within tolerance." Historical safety properties for model lineage are not tracked cumulatively.',
+    mitigation:
+      'Define a safety property floor that cannot be traded against capability gains. Require cumulative regression checks across model lineages, not only version-to-version comparisons. Treat a consistent directional trend as requiring intervention even when individual steps are small.',
+  },
+  {
+    id: 'telemetry-blindness',
+    title: 'Telemetry Blindness',
+    family: 'Visibility',
+    severity: 'open',
+    definition:
+      'Standard observability tools were designed for human-authored software processes. As AI systems contribute to their own development, the instrumentation may not capture what is meaningful about the system\'s behavior. Dashboards look healthy while the actual process being monitored has changed substantially.',
+    whyItMatters:
+      'Anthropic\'s research agenda explicitly identifies telemetry systems for measuring aggregate AI R&D speed as an open problem. You cannot slow what you cannot measure. If the rate of capability gain becomes invisible to observers outside the lab, the case for coordinated intervention requires evidence that does not yet exist.',
+    warningSign:
+      'Post-incident investigations cannot reconstruct what the AI system actually decided during a task. Aggregate AI R&D speed is not tracked as a metric. "Fire drill" exercises to test whether the monitoring system would catch a significant capability change have not been run.',
+    mitigation:
+      'Design observability specifically for AI R&D pipelines: log semantic content, not just metadata. Build "fire drill" protocols to test whether telemetry can reconstruct a capability change after the fact. Develop shared industry standards for measuring aggregate AI R&D velocity.',
+  },
+  {
+    id: 'compute-gated-acceleration',
+    title: 'Compute-Gated Acceleration',
+    family: 'Access',
+    severity: 'structural',
+    definition:
+      'AI R&D capability is effectively concentrated at organizations with enough compute to run frontier training runs. Safety research institutions, academic groups, and oversight bodies do not have comparable access. The ability to reproduce, audit, or independently evaluate frontier systems requires resources that most oversight entities do not have.',
+    whyItMatters:
+      'Effective oversight requires the ability to verify, not just trust. An oversight body that cannot run comparable experiments cannot credibly audit those that can. As each training generation requires more compute than the last, the gap between what frontier labs can do and what auditors can verify widens structurally.',
+    warningSign:
+      'The compute required to reproduce or audit a frontier training run exceeds the annual compute budget of all publicly funded AI safety institutions combined. Independent evaluators must request access from the organization being evaluated. Critical safety findings depend on access that can be revoked.',
+    mitigation:
+      'Compute access programs for safety researchers with no strings attached. Shared evaluation infrastructure funded independently of frontier labs. Agreements to provide intermediate model checkpoints to third-party auditors. Public disclosure requirements for frontier training runs above a compute threshold.',
+  },
+  {
+    id: 'delegated-research-taste',
+    title: 'Delegated Research Taste',
+    family: 'Judgment',
+    severity: 'structural',
+    definition:
+      'Human researchers gradually defer to AI systems on which experiments to run, which hypotheses to prioritize, and which results are worth pursuing. The AI\'s prior on what constitutes interesting or tractable research shapes what the field works on. This is distinct from AI executing a human-specified research plan.',
+    whyItMatters:
+      'Research taste is accumulated judgment about what problems matter, which risks are worth taking, and what counts as genuine progress. If that judgment is delegated to a system trained on the existing literature, the field is likely to pursue what has been rewarded before rather than what is actually important. Safety-relevant research directions that are unconventional or hard to evaluate may be systematically underweighted.',
+    warningSign:
+      'AI systems consistently recommend incremental directions over high-uncertainty, potentially high-value ones. Researchers describe "going along" with AI suggestions because the AI\'s reasoning is plausible and refuting it takes more time than executing on it. The range of problems being worked on narrows across the field without any explicit decision to narrow it.',
+    mitigation:
+      'Preserve explicit human ownership of research agenda-setting as a distinct activity, not a byproduct of AI-assisted planning. Audit whether AI research suggestions are systematically biased toward certain problem types or away from certain methodologies. Build deliberate counterweights: time, funding, and attention reserved for directions the AI does not recommend.',
+  },
+  {
+    id: 'security-inversion',
+    title: 'Security Inversion',
+    family: 'Security',
+    severity: 'structural',
+    definition:
+      'AI development agents acquire privileged access to training infrastructure, weight storage, model registries, and evaluation pipelines. Conventional security architecture assumes the threat comes from outside the perimeter. When the entity with insider access is an AI agent rather than a human employee, the threat model changes and most existing controls do not apply.',
+    whyItMatters:
+      'An AI agent that can write to training configs or modify evaluation code has the ability to influence its own successors directly. Whether through unexpected behavior, prompt injection from adversarial inputs, or deliberate manipulation, the consequences of insider access at this level are categorically different from conventional software vulnerabilities.',
+    warningSign:
+      'AI development agents have write access to training configurations, model weights, or evaluation code without requiring multi-party human authorization. Security architecture for the AI development pipeline was designed for human developers and has not been re-evaluated for AI agents. Access logs for AI agents are not reviewed at the same cadence as access logs for humans.',
+    mitigation:
+      'Multi-party human authorization for any write operation on AI development infrastructure. Immutable audit logs for all pipeline modifications that cannot be altered by agents. Principle of least privilege applied to AI agents: agents receive only the access required for the specified task and no more. Regular adversarial review of what a compromised agent could reach.',
+  },
+  {
+    id: 'coordination-failure',
+    title: 'Coordination Failure',
+    family: 'Governance',
+    severity: 'open',
+    definition:
+      'Individual labs make locally rational decisions — accelerating capability research, adjusting safety margins in response to competitive pressure, interpreting safety standards in their own favor — that produce collectively irrational outcomes. No single actor controls or even observes the aggregate trajectory.',
+    whyItMatters:
+      'Anthropic proposed a coordinated pause option in June 2026 and acknowledged that verification of any such agreement is "much more challenging than with other technologies." The proposal exists. The mechanism does not. Safety commitments made without shared verification are only as durable as the competitive pressure that tests them.',
+    warningSign:
+      'Safety commitments are made unilaterally with no shared verification mechanism. Capability thresholds that were previously treated as requiring caution are crossed by multiple labs in rapid succession without triggering meaningful review. Private acknowledgment that the pace is too fast coexists with public statements that progress is proceeding responsibly.',
+    mitigation:
+      'Inter-lab safety standards with independent third-party verification. Shared compute thresholds above which mandatory third-party review is required before a training run proceeds. International agreements on frontier training run disclosure, modeled on existing arms control verification frameworks. Fire-drill exercises to test whether coordination mechanisms work before they are needed.',
+  },
+]
+
 export const FAILURE_MODES: FailureMode[] = [
   {
     id: 'specification-tunnel',
