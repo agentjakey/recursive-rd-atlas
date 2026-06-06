@@ -1,129 +1,137 @@
-import { AUTHOR, GITHUB_URL, LAST_UPDATED, SIBLING_PROJECTS } from '@/lib/config'
+import React from 'react'
+import { LAST_UPDATED, SIBLING_PROJECTS, LINKEDIN_URL, KOFI_URL } from '@/lib/config'
 
-const SOURCES = [
-  {
-    label: 'Anthropic Institute: Recursive Self-Improvement',
-    url: 'https://www.anthropic.com/institute/recursive-self-improvement',
-  },
-  {
-    label: 'Anthropic Research Agenda',
-    url: 'https://www.anthropic.com/research/anthropic-institute-agenda',
-  },
-  {
-    label: 'METR: Time Horizons',
-    url: 'https://metr.org/time-horizons/',
-  },
-  {
-    label: 'METR: RE-Bench (Evaluating R&D Capabilities)',
-    url: 'https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/',
-  },
-]
+const linkStyle: React.CSSProperties = {
+  color: 'inherit',
+  textDecoration: 'underline',
+  textDecorationColor: 'rgba(92, 90, 84, 0.45)',
+  textUnderlineOffset: '2px',
+}
 
 export function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="max-w-[720px] mx-auto px-6 pt-12 pb-16">
+      <div className="max-w-[720px] mx-auto px-6 py-16">
 
-        {/* Site identity */}
-        <div className="mb-10 pb-10 border-b border-border">
-          <p className="font-sans text-[15px] font-semibold text-primary" style={{ letterSpacing: '-0.02em', marginBottom: '6px' }}>
-            Recursive R&D Atlas
-          </p>
-          <p className="font-serif text-[15px] text-secondary leading-[1.7]">
-            An educational tool for understanding the current state of AI involvement
-            in AI R&D. No claims here are predictions. All quantitative statements
-            are sourced from Anthropic Institute or METR publications.
-          </p>
-        </div>
-
-        {/* Two-col: About + Sibling Projects */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
+        {/* Top two-column: About + Sibling Projects */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           <div>
-            <p className="font-mono text-[11px] text-accent tracking-widest uppercase mb-4">
+            <p
+              className="font-mono text-[11px] text-accent tracking-widest uppercase"
+              style={{ marginBottom: '14px' }}
+            >
               About
             </p>
-            <p className="font-serif text-[15px] text-secondary leading-[1.8]">
+            <p className="font-serif text-[16px] text-secondary leading-[1.8]">
               Built by{' '}
               <a
-                href={GITHUB_URL}
+                href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-2 decoration-[#D0CCC5] hover:decoration-secondary transition-[text-decoration-color] duration-150"
+                style={linkStyle}
               >
-                {AUTHOR}
+                Jacob Ortiz
               </a>{' '}
-              as a research communication tool. Recursive self-improvement is not
-              presented as proven or inevitable. The goal is to make visible where
-              the evidence currently points.
+              as a learning tool and public-interest resource. This project maps
+              AI-driven AI R&D as an educational model, not as a prediction,
+              classifier, or benchmark.
             </p>
           </div>
 
           <div>
-            <p className="font-mono text-[11px] text-accent tracking-widest uppercase mb-4">
+            <p
+              className="font-mono text-[11px] text-accent tracking-widest uppercase"
+              style={{ marginBottom: '14px' }}
+            >
               Sibling Projects
             </p>
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-3">
               {SIBLING_PROJECTS.map((p) => (
                 <a
                   key={p.name}
                   href={p.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 font-sans text-[14px] text-secondary hover:text-primary transition-colors duration-150"
+                  className="font-sans text-[14px] text-secondary hover:text-primary transition-colors"
+                  style={{
+                    textDecoration: 'underline',
+                    textDecorationColor: 'rgba(92, 90, 84, 0.35)',
+                    textUnderlineOffset: '2px',
+                  }}
                 >
-                  <span
-                    className="inline-block w-1 h-1 rounded-full flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity duration-150"
-                    style={{ background: '#C2411C' }}
-                  />
-                  <span className="underline underline-offset-2 decoration-[#D0CCC5] group-hover:decoration-secondary transition-[text-decoration-color] duration-150">
-                    {p.name}
-                  </span>
+                  {p.name}
                 </a>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Sources */}
+        {/* About This Project */}
         <div className="border-t border-border pt-8 mb-8">
-          <p className="font-mono text-[11px] text-accent tracking-widest uppercase mb-4">
-            Primary Sources
+          <p
+            className="font-mono text-[11px] text-accent tracking-widest uppercase"
+            style={{ marginBottom: '14px' }}
+          >
+            About this project
           </p>
-          <div className="flex flex-col gap-2">
-            {SOURCES.map((s) => (
-              <a
-                key={s.url}
-                href={s.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-start gap-3 font-sans text-[13px] text-secondary hover:text-primary transition-colors duration-150"
-              >
-                <span
-                  className="flex-shrink-0 mt-[7px] inline-block w-1 h-1 rounded-full"
-                  style={{ background: '#8A8880' }}
-                />
-                <span className="underline underline-offset-2 decoration-transparent group-hover:decoration-[#8A8880] transition-[text-decoration-color] duration-150">
-                  {s.label}
-                </span>
-              </a>
-            ))}
-          </div>
+          <p
+            className="font-sans text-[14px] text-secondary leading-[1.75]"
+            style={{ marginBottom: '10px' }}
+          >
+            Built as a learning tool and technical portfolio piece by{' '}
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+            >
+              Jacob Ortiz
+            </a>
+            , working on AI safety, interpretability, and ML research.
+          </p>
+          <p
+            className="font-sans text-[14px] text-secondary leading-[1.75]"
+            style={{ marginBottom: '10px' }}
+          >
+            Interactive visualizations run in the browser using toy models and
+            illustrative demos. They are not reproductions of frontier model
+            behavior.
+          </p>
+          <p
+            className="font-sans text-[14px] text-secondary leading-[1.75]"
+            style={{ marginBottom: '14px' }}
+          >
+            Citations link to original sources where available.
+          </p>
+          <p className="font-sans text-[13px] text-secondary leading-[1.7]">
+            If this was useful, you can{' '}
+            <a
+              href={KOFI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+            >
+              support my work on Ko-fi
+            </a>
+            .
+          </p>
         </div>
 
         {/* Closing */}
         <div className="border-t border-border pt-8">
           <p
-            className="font-serif italic text-[15px] text-[#8A8880] leading-[1.78] mb-5"
+            className="font-serif italic text-[14px] text-[#8A8880] leading-[1.7] mb-4"
             style={{ maxWidth: '560px' }}
           >
-            Recursive self-improvement is not presented here as an inevitability.
-            The goal is to make visible what the data actually says, so that the
-            questions worth asking become clearer.
+            Part of a broader effort to learn AI safety in public, make
+            difficult concepts more accessible, and invite careful feedback. The
+            map is not the territory, but it can help you ask better questions.
           </p>
-          <p className="font-mono text-[11px] text-[#AEABA4]">
-            Last updated: {LAST_UPDATED} &middot; MIT License &middot; Errors are mine
+          <p className="font-mono text-[11px] text-[#8A8880]">
+            Last updated: {LAST_UPDATED} &middot; MIT License &middot; Errors are mine.
           </p>
         </div>
+
       </div>
     </footer>
   )
